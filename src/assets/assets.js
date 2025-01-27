@@ -56,6 +56,7 @@ import p_img52 from './p_img52.png'
 
 
 import logo from './logo.png'
+import logo1 from './logo-1.jpg'
 import hero_img from './hero_img.png'
 import hero_img_2 from './hero_img_2.png'
 import hero_3 from './hero_3.jpg'
@@ -79,6 +80,7 @@ import cross_icon from './cross_icon.png'
 
 export const assets = {
     logo,
+    logo1,
     hero_img,
     hero_3,
     hero_img_2,
