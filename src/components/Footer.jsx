@@ -8,7 +8,7 @@ const Footer = () => {
                 <div>
                     <p className="text-3xl font-bold mb-5 text-gray-800">WatchLab</p>
                     <p className="w-full md:w-2/3 text-gray-600">
-                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                    At WatchLab, we are passionate about curating the finest timepieces that blend craftsmanship, innovation, and style. With a rich history of designing watches that stand the test of time, we aim to offer our customers precision, luxury, and a unique expression of personality through every wristwatch. Whether you're a seasoned collector or a first-time buyer, WatchLab brings you a collection that promises unmatched quality and timeless appeal.
                     </p>
                 </div>
 
@@ -26,14 +26,14 @@ const Footer = () => {
                     <p className='text-xl font-medium mb-5'>GET IN TOUCH</p>
                     <ul className='flex flex-col gap-1 text-gray-600'>
                         <li>+1-212-345-411</li>
-                        <li>help@foreveru.com</li>
+                        <li>officialwatchlab@gmail.com</li>
 
                     </ul>
                 </div>
             </div>
             <div>
                 <hr />
-                <p className='py-5 text-sm text-center'>Copyright 2-24 @ forever.com - All Right Reserved</p>
+                <p className='py-5 text-sm text-center'>Copyright 2025 @ forever.com - All Right Reserved</p>
             </div>
         </div>
     )
