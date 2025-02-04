@@ -6,6 +6,7 @@ import ProductItem from './ProductItem';
 const LatestCollection = () => {
     const { products } = useContext(ShopContext);
     const [latestProducts, setLatestProducts] = useState([]);
+console.log(products);
 
     useEffect(() => {
         setLatestProducts(products.slice(0, 10));  // Display only the first 10 products
@@ -33,24 +34,9 @@ const LatestCollection = () => {
             {/* Rendering products */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 gap-y-6">
                 {
-                    latestProducts.map((item, index) => {
-                        const discountedPrice = getDiscountedPrice(item.price, item.discount); // Get discounted price
-                        
-                        return (
-                            <ProductItem 
-                                key={index} 
-                                id={item._id} 
-                                image={item.image[0]}  // Assuming the first image is the main image
-                                name={item.name} 
-                                price={item.price} 
-                                discount={item.discount}
-                                discountedPrice={discountedPrice}  // Pass null if no discount
-                                stock={item.stock}
-                                dialColor={item.dialColor}
-                                strapMaterial={item.strapMaterial}
-                            />
-                        );
-                    })
+                      latestProducts.map((item,index)=>(
+                        <ProductItem key={index} id={item._id} image={item.image} name={item.name} price = {item.price}  />
+                     ))
                 }
             </div>
         </div>
