@@ -3,14 +3,23 @@ import { useParams } from 'react-router-dom'
 import { ShopContext } from '../context/ShopContext'
 import { assets } from '../assets/assets'
 import RelatedProducts from '../components/RelatedProducts'
+import toast from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom';
+
 
 const Product = () => {
 
+  const navigate = useNavigate();
   const { productId } = useParams()
   const { products, currency, addToCart } = useContext(ShopContext)
   const [productData, setProductData] = useState(false)
   const [image, setImage] = useState('')
   const [size, setSize] = useState('')
+
+  const HandleNavigate = () => {
+    navigate('/cart'); // Redirects to the cart page
+  };
+  
 
   const fetchProductData = () => {
     products.map((item) => {
@@ -59,13 +68,24 @@ const Product = () => {
             <p>Select Size</p>
             <div className='flex gap-2'>
               {
-                productData.sizes.map((item, index) => (
+                productData.colours.map((item, index) => (
                   <button onClick={() => setSize(item)} className={`border py-2 px-4 bg-gray-100 ${item === size ? 'border-orange-500' : ''}`} key={index}>{item}</button>
                 ))
               }
             </div>
           </div>
-          <button onClick={()=>addToCart(productData._id, size)} className='bg-black text-white px-8 py-3 text-sm active:bg-gray-700'>ADD TO CART</button>
+          <button
+            onClick={async () => {
+              const added = await addToCart(productData._id, size);
+              if (added) {
+                toast.success("Item added to cart!");
+                navigate('/cart');
+              }
+            }}
+            className='bg-black text-white px-8 py-3 text-sm active:bg-gray-700'
+          >
+            ADD TO CART
+          </button>
           <hr className='mt-8 sm:w-4/5' />
           <div className="text-sm text-gray-500 mt-5 flex flex-col gap-1">
             <p>100% Original product.</p>

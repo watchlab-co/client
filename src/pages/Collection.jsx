@@ -11,25 +11,25 @@ const Collection = () => {
   const { products, search, showSearch } = useContext(ShopContext)
   const [category, setCategory] = useState([])
   const [subCategory, setSubCategory] = useState([])
-  const [sortType,setSorType] = useState('relevant')
-  
-  const toggleCategory = (e)=>{
-    if(category.includes(e.target.value)){
-      setCategory(prev=> prev.filter(item => item !== e.target.value))
-    }else{
-      setCategory(prev => [...prev,e.target.value])
+  const [sortType, setSorType] = useState('relevant')
+
+  const toggleCategory = (e) => {
+    if (category.includes(e.target.value)) {
+      setCategory(prev => prev.filter(item => item !== e.target.value))
+    } else {
+      setCategory(prev => [...prev, e.target.value])
     }
   }
 
-  const toggleSubCategory = (e)=>{
-    if(subCategory.includes(e.target.value)){
-      setSubCategory(prev=> prev.filter(item => item !== e.target.value))
-    }else{
-      setSubCategory(prev => [...prev,e.target.value])
+  const toggleSubCategory = (e) => {
+    if (subCategory.includes(e.target.value)) {
+      setSubCategory(prev => prev.filter(item => item !== e.target.value))
+    } else {
+      setSubCategory(prev => [...prev, e.target.value])
     }
   }
 
-  const applyFilter =()=>{
+  const applyFilter = () => {
     let productsCopy = products.slice()
 
     if (showSearch && search) {
@@ -38,44 +38,44 @@ const Collection = () => {
       );
     }
 
-    if(category.length > 0){
+    if (category.length > 0) {
       productsCopy = productsCopy.filter(item => category.includes(item.category))
     }
 
-    if(subCategory.length > 0){
+    if (subCategory.length > 0) {
       productsCopy = productsCopy.filter(item => subCategory.includes(item.subCategory))
     }
 
     setFilterProducts(productsCopy)
   }
 
-  const sortProduct =()=>{
+  const sortProduct = () => {
     let fpCopy = filterProducts.slice()
 
-    switch (sortType){
-      case 'low-high' :
-        setFilterProducts(fpCopy.sort((a,b)=>(a.price - b.price)))
+    switch (sortType) {
+      case 'low-high':
+        setFilterProducts(fpCopy.sort((a, b) => (a.price - b.price)))
         break;
 
-      case 'high-low' :
-          setFilterProducts(fpCopy.sort((a,b)=>b.price - a.price))
-          break;
-      
+      case 'high-low':
+        setFilterProducts(fpCopy.sort((a, b) => b.price - a.price))
+        break;
+
       default:
         applyFilter();
         break;
-        
-      
+
+
     }
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     applyFilter()
-  },[category,subCategory,search,showSearch,products])
+  }, [category, subCategory, search, showSearch, products])
 
-  useEffect(()=>{
+  useEffect(() => {
     sortProduct()
-  },[sortType])
+  }, [sortType])
 
   return (
     <div className='flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t'>
@@ -123,7 +123,7 @@ const Collection = () => {
         <div className="flex justify-between text-base sm:text-2xl mb-4">
           <Title text1={'ALL'} text2={'COLLECTIONS'} />
           {/* Product sort */}
-          <select onChange={(e)=>setSorType(e.target.value)} className='border-2 border-gray-300 text-sm px-2' >
+          <select onChange={(e) => setSorType(e.target.value)} className='border-2 border-gray-300 text-sm px-2' >
             <option value="relevant">Sort by: Relevant</option>
             <option value="low-high">Sort by: Low to High</option>
             <option value="high-low">Sort by: High to Low</option>
@@ -134,7 +134,7 @@ const Collection = () => {
         <div className="grid grid-cols-2  md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6 ">
           {
             filterProducts.map((item, index) => (
-              <ProductItem key={index} id={item._id} name={item.name} image={item.image} price={item.price} />
+              <ProductItem key={index} id={item._id} name={item.name} image={item.image} price={item.price} discount={item.discount || ''} />
             ))
           }
         </div>

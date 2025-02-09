@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios'
 export const ShopContext = createContext();
@@ -20,8 +20,8 @@ const ShopContextProvider = (props) => {
     const addToCart = async (itemId, size) => {
 
         if (!size) {
-            toast.info('Please select a size')
-            return;
+            toast.error('Please select a size')
+            return false;
         }
 
         let cartData = structuredClone(cartItems)
@@ -40,8 +40,10 @@ const ShopContextProvider = (props) => {
 
         if(token){
             try {
-                await axios.post(backendUrl + '/api/cart/add',{itemId, size},{headers:{token}})
+                const res = await axios.post(backendUrl + '/api/cart/add',{itemId, size},{headers:{token}})
+                console.log(res);
                 
+                toast.success("item added to cart")
             } catch (error) {
                 console.log(error)
                 toast.error(error.message)
