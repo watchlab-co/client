@@ -93,6 +93,8 @@ const Product = () => {
                 return;
               }
               const added = await addToCart(productData._id, size);
+          
+              
               if (added) {
                 toast.success('Item added to cart!');
                 navigate('/cart');

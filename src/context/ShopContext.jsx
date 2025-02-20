@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios'
 export const ShopContext = createContext();
 
+
 const ShopContextProvider = (props) => {
 
     const currency = '₹'
@@ -24,6 +25,7 @@ const ShopContextProvider = (props) => {
             return false;
         }
 
+        
         let cartData = structuredClone(cartItems)
 
         if (cartData[itemId]) {
@@ -41,9 +43,8 @@ const ShopContextProvider = (props) => {
         if(token){
             try {
                 const res = await axios.post(backendUrl + '/api/cart/add',{itemId, size},{headers:{token}})
-                console.log(res);
-                
                 toast.success("item added to cart")
+                navigate('/cart')
             } catch (error) {
                 console.log(error)
                 toast.error(error.message)
@@ -91,20 +92,26 @@ const ShopContextProvider = (props) => {
         let totalAmount = 0;
         for (const items in cartItems) {
             let itemInfo = products.find((product) => product._id === items);
-           
+    
+            if (!itemInfo) {
+                console.warn(`Product with ID ${items} not found in products list.`);
+                continue; // Skip if the product is not found
+            }
+    
             for (const item in cartItems[items]) {
                 try {
                     if (cartItems[items][item] > 0) {
-                        totalAmount += itemInfo.price * cartItems[items][item]
+                        totalAmount += itemInfo.price * cartItems[items][item];
                     }
                 } catch (error) {
-                    console.log(error)
-                    toast.error(error.message)
+                    console.log(error);
+                    toast.error(error.message);
                 }
             }
         }
-        return totalAmount
-    }
+        return totalAmount;
+    };
+    
 
 
     const getProductsData = async () => {
