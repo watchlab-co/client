@@ -13,7 +13,7 @@ const Contact = () => {
         <img className='w-full md:max-w-[480px]' src={assets.contact_img} alt="" />
       <div className='flex flex-col justify-center items-start gap-6'>
         <p className='font-semibold text-xl text-gray-600' >Watch Lab</p>
-        <p className='text-gray-500'>Malappuram <br />Malappuram, Kerala</p>
+        <p className='text-gray-500'>Malappuram <br />Kerala, India</p>
         <p className='text-gray-500' >Tel : (+91) 999999999 <br /> officialwatchlab@gmail.com</p>
         <p className='font-semibold text-xl text-gray-600'>Careers at Forever</p>
         <p className='text-gray-500'>Learn more about our teams and job openings.</p>
