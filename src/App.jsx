@@ -14,6 +14,11 @@ import Footer from './components/Footer'
 import SearchBar from './components/SearchBar'
 import { Toaster } from 'react-hot-toast'
 import Verify from './pages/Verify'
+import RefundPolicy from './pages/RefundPolicy'
+import Terms from './pages/Terms'
+import PrivacyPolicy from './pages/PrivacyPolicy'
+import FAQs from './pages/FAQs'
+import ShippingPolicy from './pages/ShippingPolicy'
 
 const App = () => {
   return (
@@ -22,7 +27,6 @@ const App = () => {
       <Navbar />
       <SearchBar />
       <Routes>
-        
         <Route path='/' element={<Home />} />
         <Route path='/collection' element={<Collection />} />
         <Route path='/about' element={<About />} />
@@ -33,7 +37,17 @@ const App = () => {
         <Route path='/place-order' element={<PlaceOrder />} />
         <Route path='/orders' element={<Orders />} />
         <Route path='/verify' element={<Verify />} />
+
+        {/* Razorpay Pages */}
+        <Route path='/refund-policy' element={<RefundPolicy />} />
+        <Route path='/terms-and-conditions' element={<Terms />} />
+        <Route path='/privacy-policy' element={<PrivacyPolicy />} />
+        <Route path='/faqs' element={<FAQs />} />
+        <Route path='/shipping-policy' element={<ShippingPolicy />} />
+
+
       </Routes>
+
       <Footer />
     </div>
   )
