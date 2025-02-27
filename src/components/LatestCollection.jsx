@@ -2,8 +2,10 @@ import React, { useContext, useEffect, useState } from 'react';
 import { ShopContext } from '../context/ShopContext';
 import Title from './Title';
 import ProductItem from './ProductItem';
+import { useNavigate } from 'react-router-dom';
 
 const LatestCollection = () => {
+    const navigate = useNavigate()
     const { products } = useContext(ShopContext);
     const [latestProducts, setLatestProducts] = useState([]);
 
@@ -17,6 +19,10 @@ const LatestCollection = () => {
             return price - (price * discount / 100);
         }
         return null;  // Return null if there's no discount
+    };
+
+    const handleSeeMore = () => {
+        navigate('/collection')
     };
 
     return (
@@ -37,6 +43,14 @@ const LatestCollection = () => {
                         <ProductItem key={index} id={item._id} image={item.image} name={item.name} price = {item.price}  discount ={item.discount || ''} />
                      ))
                 }
+            </div>
+            <div className="flex justify-center mt-8">
+                <button
+                    onClick={handleSeeMore}
+                    className="px-6 py-3 bg-black text-white rounded-full shadow-lg transition duration-300 hover:bg-gray-800"
+                >
+                    See More
+                </button>
             </div>
         </div>
     );
