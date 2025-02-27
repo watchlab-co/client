@@ -29,11 +29,11 @@ const LatestCollection = () => {
         <div className='my-10'>
             <div className='text-center py-8 text-3xl'>
                 <Title text1={"LATEST"} text2={'COLLECTIONS'} />
-                <p className='2-3/4 m-auto text-xs sm:text-sm md:text-base text-gray-600'>
+                {/* <p className='2-3/4 m-auto text-xs sm:text-sm md:text-base text-gray-600'>
                     Explore the latest additions to our exquisite watch collection, where timeless elegance meets modern craftsmanship.
                     From classic designs to contemporary styles, our latest range showcases the perfect blend of functionality and luxury.
                     Whether you're seeking a statement piece or an everyday accessory, our collection is designed to elevate your look for any occasion.
-                </p>
+                </p> */}
             </div>
 
             {/* Rendering products */}
