@@ -97,9 +97,6 @@ const Collection = () => {
             <p className='flex gap-2'>
               <input onChange={toggleCategory} className='w-3' type="checkbox" value={'Couple'} />Couple
             </p>
-            <p className='flex gap-2'>
-              <input onChange={toggleCategory} className='w-3' type="checkbox" value={'Kids'} />Kids
-            </p>
           </div>
         </div>
 
@@ -109,10 +106,7 @@ const Collection = () => {
           <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
             {[
               "Rolex", "Casio", "Seiko", "Fossil", "Rado", "Patek Philippe", "Cartier",
-              "Tissot", "Audemars Piguet", "Omega", "Hublot", "Daniel Wellington", "Fastrack",
-              "Versace", "Citizen", "Apple", "Richard Mille", "Gucci", "Franck Muller",
-              "Vacheron Constantin", "Burberry", "Bvlgari", "Invicta", "Calvin Klein (CK)",
-              "Christian Dior", "Chanel", "Guess"
+              "Tissot"
             ].map((brand, index) => (
               <p key={index} className='flex gap-2'>
                 <input onChange={toggleSubCategory} className='w-3' type="checkbox" value={brand} />{brand}
