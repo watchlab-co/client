@@ -49,6 +49,9 @@ const ShopContextProvider = (props) => {
                 console.log(error)
                 toast.error(error.message)
             }
+        }else{
+            console.log("No Token found");
+            return false
         }
     }
 

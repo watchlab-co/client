@@ -70,7 +70,7 @@ const Product = () => {
           {/* Size selection */}
           {productData?.colours?.length > 0 && (
             <div className="flex flex-col gap-4 my-8">
-              <p>Select Size</p>
+              <p>Select clour</p>
               <div className="flex gap-2">
                 {productData?.colours?.map((item, index) => (
                   <button
@@ -93,11 +93,14 @@ const Product = () => {
                 return;
               }
               const added = await addToCart(productData._id, size);
-          
-              
+              console.log(added);
+
               if (added) {
                 toast.success('Item added to cart!');
                 navigate('/cart');
+              }else{
+                toast.error('Please Login with Account')
+                navigate("/login")
               }
             }}
             className="bg-black text-white px-8 py-3 text-sm active:bg-gray-700"
