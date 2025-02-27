@@ -19,10 +19,10 @@ const Navbar = () => {
     return (
         <div className='flex items-center justify-between py-5 font-medium'>
             <Link to='/'><span className='text-2xl font-bold'>Watch Lab</span></Link>
-            <NavLink to='/collection' className='flex flex-col items-center gap-1'>
-                    <p>COLLECTION</p>
-                    <hr className='w-2/4 border-npne h-[1.5px] bg-gray-700 hidden' />
-                </NavLink>
+            <NavLink to='/collection' className='flex flex-col items-center gap-1 sm:hidden'>
+                <p>COLLECTION</p>
+            </NavLink>
+
 
             <ul className='hidden sm:flex gap-5 text-sm text-gray-700'>
                 <NavLink to='/' className='flex flex-col items-center gap-1'>
@@ -53,14 +53,14 @@ const Navbar = () => {
                         <div className='group-hover:block hidden absolute dropdown-menu right-0 pt-4'>
                             <div className='flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded'>
                                 <p className='cursor-pointer hover:text-black'>My Profile</p>
-                                <p onClick={()=>navigate('/orders')} className='cursor-pointer hover:text-black'>Orders</p>
+                                <p onClick={() => navigate('/orders')} className='cursor-pointer hover:text-black'>Orders</p>
                                 <p onClick={logout} className='cursor-pointer hover:text-black'>Logout</p>
                             </div>
                         </div>}
                 </div>
                 <Link to='/cart' className='relative'>
                     <img className='w-5 min-w-5' src={assets.cart_icon} alt="" />
-                   {token ?  <p className='absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]'>{getCartCount()}</p> : <p> </p>}
+                    {token ? <p className='absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]'>{getCartCount()}</p> : <p> </p>}
                 </Link>
                 <img onClick={() => setVisible(true)} className='w-5 cursor-pointer sm:hidden' src={assets.menu_icon} alt="" />
             </div>
