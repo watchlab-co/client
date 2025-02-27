@@ -70,7 +70,7 @@ const Product = () => {
           {/* Size selection */}
           {productData?.colours?.length > 0 && (
             <div className="flex flex-col gap-4 my-8">
-              <p>Select clour</p>
+              <p>Select colour</p>
               <div className="flex gap-2">
                 {productData?.colours?.map((item, index) => (
                   <button
