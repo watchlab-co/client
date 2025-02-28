@@ -14,7 +14,7 @@ const Contact = () => {
       <div className='flex flex-col justify-center items-start gap-6'>
         <p className='font-semibold text-xl text-gray-600' >Watch Lab</p>
         <p className='text-gray-500'>Malappuram <br />Kerala, India</p>
-        <p className='text-gray-500' >Tel : (+91) 999999999 <br /> officialwatchlab@gmail.com</p>
+        <p className='text-gray-500' >Tel : (+91) 999999999 <br /> support@watchlab.in</p>
         <p className='font-semibold text-xl text-gray-600'>Careers at Forever</p>
         <p className='text-gray-500'>Learn more about our teams and job openings.</p>
         <button className=' border border-black px-8 py-4 text-sm hover:bg-black hover:text-white transition-all duration-500'>Explore Jobs</button>

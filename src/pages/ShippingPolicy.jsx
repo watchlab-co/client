@@ -23,7 +23,7 @@ const ShippingPolicy = () => {
 
       <h2 className="text-lg font-semibold mt-4">📞 Contact Us</h2>
       <p>For shipping-related queries, contact us at:</p>
-      <p className="mt-2 font-semibold">📧 Email: officialwatchlab@gmail.com</p>
+      <p className="mt-2 font-semibold">📧 Email: support@watchlab.in</p>
       <p className="font-semibold">📞 Phone: 9744676504</p>
     </div>
   );

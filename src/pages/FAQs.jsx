@@ -11,7 +11,7 @@ const FAQs = () => {
         </div>
         <div>
           <h2 className="text-lg font-semibold">How can I contact WatchLab?</h2>
-          <p>Email: officialwatchlab@gmail.com</p>
+          <p>Email: support@watchlab.in</p>
           <p>Phone: 9744676504</p>
         </div>
         <div>

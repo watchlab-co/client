@@ -85,33 +85,35 @@ const Collection = () => {
         </p>
 
         {/* Category Filter */}
-        <div className={`border border-gray-300 pl-5 py-3 mt-6 ${showFilter ? '' : 'hidden'} sm:block`}>
-          <p className='mb-3 text-sm font-medium'>CATEGORIES</p>
-          <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
-            <p className='flex gap-2'>
-              <input onChange={toggleCategory} className='w-3' type="checkbox" value={'Men'} />Men
-            </p>
-            <p className='flex gap-2'>
-              <input onChange={toggleCategory} className='w-3' type="checkbox" value={'Women'} />Women
-            </p>
-            <p className='flex gap-2'>
-              <input onChange={toggleCategory} className='w-3' type="checkbox" value={'Couple'} />Couple
-            </p>
-          </div>
-        </div>
-
-        {/* Sub-category (Watch Brands) Filter */}
-        <div className={`border border-gray-300 pl-5 py-3 my-5 ${showFilter ? '' : 'hidden'} sm:block`}>
-          <p className='mb-3 text-sm font-medium'>BRANDS</p>
-          <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
-            {[
-              "Rolex", "Casio", "Seiko", "Fossil", "Rado", "Patek Philippe", "Cartier",
-              "Tissot"
-            ].map((brand, index) => (
-              <p key={index} className='flex gap-2'>
-                <input onChange={toggleSubCategory} className='w-3' type="checkbox" value={brand} />{brand}
+        <div>
+          <div className={`border border-gray-300 pl-5 py-3 mt-6 ${showFilter ? '' : 'hidden'} sm:block`}>
+            <p className='mb-3 text-sm font-medium'>CATEGORIES</p>
+            <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
+              <p className='flex gap-2'>
+                <input onChange={toggleCategory} className='w-3' type="checkbox" value={'Men'} />Men
               </p>
-            ))}
+              <p className='flex gap-2'>
+                <input onChange={toggleCategory} className='w-3' type="checkbox" value={'Women'} />Women
+              </p>
+              <p className='flex gap-2'>
+                <input onChange={toggleCategory} className='w-3' type="checkbox" value={'Couple'} />Couple
+              </p>
+            </div>
+          </div>
+
+          {/* Sub-category (Watch Brands) Filter */}
+          <div className={`border border-gray-300 pl-5 py-3 my-5 ${showFilter ? '' : 'hidden'} sm:block`}>
+            <p className='mb-3 text-sm font-medium'>BRANDS</p>
+            <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
+              {[
+                "Rolex", "Casio", "Seiko", "Fossil", "Rado", "Patek Philippe", "Cartier",
+                "Tissot"
+              ].map((brand, index) => (
+                <p key={index} className='flex gap-2'>
+                  <input onChange={toggleSubCategory} className='w-3' type="checkbox" value={brand} />{brand}
+                </p>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -135,7 +137,7 @@ const Collection = () => {
               <ProductItem key={index} id={item._id} name={item.name} image={item.image} price={item.price} discount={item.discount || ''} />
             ))
           ) : (
-            
+
             <p>No products found.</p>
           )}
         </div>

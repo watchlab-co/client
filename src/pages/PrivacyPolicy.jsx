@@ -7,7 +7,7 @@ const PrivacyPolicy = () => {
       <p>WatchLab values your privacy. We collect only necessary information for order processing and customer support.</p>
       <p className="mt-4">Your data is never shared with third parties.</p>
       <p className="mt-4">For any privacy concerns, contact:</p>
-      <p className="mt-2 font-semibold">📧 officialwatchlab@gmail.com</p>
+      <p className="mt-2 font-semibold">📧 support@watchlab.in</p>
       <p className="font-semibold">📞 9744676504</p>
     </div>
   );

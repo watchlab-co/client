@@ -11,7 +11,7 @@ const Terms = () => {
         <li>Payment must be completed before shipping.</li>
       </ul>
       <p className="mt-4">For questions, contact:</p>
-      <p className="mt-2 font-semibold">📧 officialwatchlab@gmail.com</p>
+      <p className="mt-2 font-semibold">📧 support@watchlab.in</p>
       <p className="font-semibold">📞 9744676504</p>
     </div>
   );

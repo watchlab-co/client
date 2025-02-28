@@ -66,7 +66,7 @@ const Product = () => {
           </div>
           <p className="mt-5 text-3xl font-medium">{currency}{productData.price}</p>
           <p className="mt-5 text-gray-500 md:w-4/5">{productData.description}</p>
-          
+
           {/* Size selection */}
           {productData?.colours?.length > 0 && (
             <div className="flex flex-col gap-4 my-8">
@@ -98,7 +98,7 @@ const Product = () => {
               if (added) {
                 toast.success('Item added to cart!');
                 navigate('/cart');
-              }else{
+              } else {
                 toast.error('Please Login with Account')
                 navigate("/login")
               }
