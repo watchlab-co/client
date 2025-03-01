@@ -43,11 +43,11 @@ const ShopContextProvider = (props) => {
         if(token){
             try {
                 const res = await axios.post(backendUrl + '/api/cart/add',{itemId, size},{headers:{token}})
-                toast.success("item added to cart")
-                navigate('/cart')
+                return res
             } catch (error) {
                 console.log(error)
                 toast.error(error.message)
+                return false
             }
         }else{
             console.log("No Token found");
