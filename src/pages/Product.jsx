@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ShopContext } from '../context/ShopContext';
 import { assets } from '../assets/assets';
@@ -9,9 +9,11 @@ const Product = () => {
   const navigate = useNavigate();
   const { productId } = useParams();
   const { products = [], currency, addToCart } = useContext(ShopContext);
+  const videoRef = useRef(null);
 
   const [productData, setProductData] = useState(null);
-  const [image, setImage] = useState('');
+  const [mediaType, setMediaType] = useState('image'); // 'image' or 'video'
+  const [selectedMedia, setSelectedMedia] = useState('');
   const [size, setSize] = useState('');
 
   useEffect(() => {
@@ -20,37 +22,99 @@ const Product = () => {
 
       const foundProduct = products.find(item => item._id === productId);
       if (foundProduct) {
+        console.log('====================================');
+        console.log('Product found:', foundProduct);
+        console.log('====================================');
         setProductData(foundProduct);
-        setImage(foundProduct.image?.[0] || ''); // Ensure first image exists
+        
+        // Set default media (prioritize first image if available)
+        if (foundProduct.image && foundProduct.image.length > 0) {
+          setSelectedMedia(foundProduct.image[0]);
+          setMediaType('image');
+        } else if (foundProduct.video) {
+          setSelectedMedia(foundProduct.video);
+          setMediaType('video');
+        }
       }
     };
 
     fetchProductData();
   }, [productId, products]);
 
+  // Handle media selection
+  const handleMediaSelect = (media, type) => {
+    setSelectedMedia(media);
+    setMediaType(type);
+    
+    // Pause any playing video when switching media
+    if (videoRef.current) {
+      videoRef.current.pause();
+    }
+  };
+
   if (!productData) {
     return <div className="text-center py-10">Loading product...</div>;
   }
+
+  // Create a combined media array for the gallery
+  const productMedia = [
+    ...(productData.image || []).map(img => ({ src: img, type: 'image' })),
+    ...(productData.video ? [{ src: productData.video, type: 'video' }] : [])
+  ];
 
   return (
     <div className="border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100">
       {/* Product data */}
       <div className="flex gap-12 sm:gap-12 flex-col sm:flex-row">
-        {/* Product images */}
+        {/* Product images & video */}
         <div className="flex-1 flex flex-col-reverse gap-3 sm:flex-row">
           <div className="flex sm:flex-col overflow-x-auto sm:overflow-y-scroll justify-between sm:justify-normal sm:w-[18.7%] w-full">
-            {productData?.image?.map((item, index) => (
-              <img
-                onClick={() => setImage(item)}
-                className="w-[24%] sm:w-full sm:mb-3 flex-shrink-0 cursor-pointer"
-                src={item}
-                key={index}
-                alt={`Product Image ${index + 1}`}
-              />
+            {productMedia.map((media, index) => (
+              <div 
+                key={index} 
+                onClick={() => handleMediaSelect(media.src, media.type)}
+                className="relative w-[24%] sm:w-full sm:mb-3 flex-shrink-0 cursor-pointer"
+              >
+                {media.type === 'image' ? (
+                  <img
+                    className="w-full h-auto"
+                    src={media.src}
+                    alt={`Product Media ${index + 1}`}
+                  />
+                ) : (
+                  <div className="relative">
+                    <video 
+                      className="w-full h-auto"
+                      src={media.src}
+                      muted
+                      poster={productData.videoPoster || productData.image?.[0]}
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white">
+                        <path d="M8 5v14l11-7z"/>
+                      </svg>
+                    </div>
+                  </div>
+                )}
+              </div>
             ))}
           </div>
           <div className="w-full sm:w-[80%]">
-            <img className="w-full h-auto" src={image} alt="Selected Product" />
+            {mediaType === 'image' ? (
+              <img 
+                className="w-full h-auto" 
+                src={selectedMedia} 
+                alt="Selected Product" 
+              />
+            ) : (
+              <video
+                ref={videoRef}
+                className="w-full h-auto"
+                src={selectedMedia}
+                controls
+                poster={productData.videoPoster || productData.image?.[0]}
+              />
+            )}
           </div>
         </div>
 
