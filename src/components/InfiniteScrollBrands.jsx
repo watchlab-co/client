@@ -1,4 +1,3 @@
-import React from 'react';
 
 const InfiniteScrollBrands = () => {
   // Array of premium brand names

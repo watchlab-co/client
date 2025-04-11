@@ -80,7 +80,7 @@ const LatestCollection = () => {
                 <div className="flex justify-center mt-12">
                     <button
                         onClick={handleSeeMore}
-                        className="group flex items-center gap-2 bg-black text-white px-8 py-3 rounded-full shadow-md transition-all duration-300 hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        className="group flex items-center gap-2 bg-amber-600 text-white px-8 py-3 rounded-full shadow-md transition-all duration-300 hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
                         <span className="font-medium">View Collection</span>
                         <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
