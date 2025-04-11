@@ -8,7 +8,7 @@ import axios from 'axios'
 import { load } from "@cashfreepayments/cashfree-js"
 
 const PlaceOrder = () => {
-  const [method, setMethod] = useState('cod');
+  const [method, setMethod] = useState('cashfree'); // Set default to cashfree
   const { navigate, backendUrl, token, cartItems, setCartItems, getCartAmount, delivery_fee, products } = useContext(ShopContext)
   const [formData, setFormData] = useState({
     firstName: '',
@@ -110,22 +110,13 @@ const PlaceOrder = () => {
           break;
 
         case 'stripe':
-          const responseStripe = await axios.post(backendUrl + '/api/order/stripe', orderData, { headers: { token } });
-          if (responseStripe.data.success) {
-            const { session_url } = responseStripe.data;
-            window.location.replace(session_url);
-          } else {
-            toast.error(responseStripe.data.message);
-          }
+          // Not implemented as it's disabled
+          toast.error("Stripe payments are currently unavailable");
           break;
 
         case 'razorpay':
-          const responseRazorpay = await axios.post(backendUrl + '/api/order/razorpay', orderData, { headers: { token } });
-          if (responseRazorpay.data.success) {
-            initPay(responseRazorpay.data.order);
-          } else {
-            toast.error(responseRazorpay.data.message);
-          }
+          // Not implemented as it's disabled
+          toast.error("Razorpay payments are currently unavailable");
           break;
 
         case 'cashfree':
@@ -134,7 +125,7 @@ const PlaceOrder = () => {
             return;
           }
           
-          const responseCashfree = await axios.post(`${backendUrl}/api/order/cashfree`, orderData, { headers: { token } });
+          const responseCashfree = await axios.post(backendUrl + '/api/order/cashfree', orderData, { headers: { token } });
           if (responseCashfree.data.success) {
             console.log("Cashfree response:", responseCashfree.data);
             let checkoutOptions = {
@@ -147,20 +138,18 @@ const PlaceOrder = () => {
               console.log("Cashfree result:", result.paymentDetails.paymentMessage);
               
               // If payment was successful, verify with backend and navigate
-              // if (result.order && result.order.status === "PAID") {
-            
-                const verifyResponse = await axios.post(
-                  `${backendUrl}/api/order/verifyCashfree`, 
-                  { orderId: responseCashfree.data.order.order_id },
-                  { headers: { token } }
-                );
-                
-                if (verifyResponse.data.success) {
-                  setCartItems({});
-                  navigate('/orders');
-                } else {
-                  toast.error("Payment verification failed. Please contact support.");
-                }
+              const verifyResponse = await axios.post(
+                backendUrl + '/api/order/verifyCashfree', 
+                { orderId: responseCashfree.data.order.order_id },
+                { headers: { token } }
+              );
+              
+              if (verifyResponse.data.success) {
+                setCartItems({});
+                navigate('/orders');
+              } else {
+                toast.error("Payment verification failed. Please contact support.");
+              }
               
             } catch (error) {
               console.error("Cashfree checkout error:", error);
@@ -172,6 +161,7 @@ const PlaceOrder = () => {
           break;
 
         default:
+          toast.error("Please select a valid payment method");
           break;
       }
 
@@ -214,20 +204,27 @@ const PlaceOrder = () => {
           <Title text1={'PAYMENT'} text2={'METHOD'} />
           {/* Payment method selection */}
           <div className='flex gap-3 flex-col lg:flex-row'>
-            <div onClick={() => setMethod('stripe')} className='flex items-center gap-3 border p-2 px-3 cursor-pointer'>
-              <p className={`min-w-3.5 h-3.5 border rounded-full ${method === 'stripe' ? 'bg-green-400' : ''} `}></p>
-              <img className='h-5 mx-4' src={assets.stripe_logo} alt="" />
+            {/* Stripe - Disabled */}
+            <div className='flex items-center gap-3 border p-2 px-3 cursor-not-allowed opacity-50'>
+              <p className='min-w-3.5 h-3.5 border rounded-full'></p>
+              <img className='h-5 mx-4' src={assets.stripe_logo} alt="Stripe" />
             </div>
+            
+            {/* Cashfree - Active */}
             <div onClick={() => setMethod('cashfree')} className='flex items-center gap-3 border p-2 px-3 cursor-pointer'>
               <p className={`min-w-3.5 h-3.5 border rounded-full ${method === 'cashfree' ? 'bg-green-400' : ''}`}></p>
               <p className='text-gray-500 text-sm font-medium mx-4'>CASHFREE</p>
             </div>
-            <div onClick={() => setMethod('razorpay')} className='flex items-center gap-3 border p-2 px-3 cursor-pointer'>
-              <p className={`min-w-3.5 h-3.5 border rounded-full ${method === 'razorpay' ? 'bg-green-400' : ''} `}></p>
-              <img className='h-5 mx-4' src={assets.razorpay_logo} alt="" />
+            
+            {/* Razorpay - Disabled */}
+            <div className='flex items-center gap-3 border p-2 px-3 cursor-not-allowed opacity-50'>
+              <p className='min-w-3.5 h-3.5 border rounded-full'></p>
+              <img className='h-5 mx-4' src={assets.razorpay_logo} alt="Razorpay" />
             </div>
-            {/* <div onClick={() => setMethod('cod')} className='flex items-center gap-3 border p-2 px-3 cursor-pointer'>
-              <p className={`min-w-3.5 h-3.5 border rounded-full ${method === 'cod' ? 'bg-green-400' : ''} `}></p>
+            
+            {/* COD - Commented out as in original code
+            <div onClick={() => setMethod('cod')} className='flex items-center gap-3 border p-2 px-3 cursor-pointer'>
+              <p className={`min-w-3.5 h-3.5 border rounded-full ${method === 'cod' ? 'bg-green-400' : ''}`}></p>
               <p className='text-gray-500 text-sm font-medium mx-4'>CASH ON DELIVERY</p>
             </div> */}
           </div>
