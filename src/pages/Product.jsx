@@ -153,7 +153,7 @@ const Product = () => {
           <button
             onClick={async () => {
               if (!size && productData?.colours?.length > 0) {
-                toast.error('Please select a size.');
+                toast.error('Please select a colour.');
                 return;
               }
               const added = await addToCart(productData._id, size);
