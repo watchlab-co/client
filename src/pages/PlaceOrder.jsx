@@ -137,21 +137,21 @@ const PlaceOrder = () => {
           const responseCashfree = await axios.post(`${backendUrl}/api/order/cashfree`, orderData, { headers: { token } });
           if (responseCashfree.data.success) {
             console.log("Cashfree response:", responseCashfree.data);
-            
             let checkoutOptions = {
               paymentSessionId: responseCashfree.data.order.payment_session_id,
               redirectTarget: "_modal"
             }
-
             try {
               const result = await cashfree.checkout(checkoutOptions);
-              console.log("Cashfree payment result:", result);
+              toast.success("Payment successful! Verifying...");
+              console.log("Cashfree result:", result.paymentDetails.paymentMessage);
               
               // If payment was successful, verify with backend and navigate
-              if (result.order && result.order.status === "PAID") {
+              // if (result.order && result.order.status === "PAID") {
+            
                 const verifyResponse = await axios.post(
                   `${backendUrl}/api/order/verifyCashfree`, 
-                  { orderId: responseCashfree.data.order_id },
+                  { orderId: responseCashfree.data.order.order_id },
                   { headers: { token } }
                 );
                 
@@ -161,9 +161,7 @@ const PlaceOrder = () => {
                 } else {
                   toast.error("Payment verification failed. Please contact support.");
                 }
-              } else {
-                toast.error("Payment was not completed");
-              }
+              
             } catch (error) {
               console.error("Cashfree checkout error:", error);
               toast.error(error.message || "Payment failed. Please try again.");
