@@ -12,12 +12,12 @@ const Hero = () => {
       <div className="w-full sm:w-1/2 flex items-center justify-center p-8 sm:p-12 lg:p-16">
         <div className="max-w-md space-y-6">
           <div className="flex items-center gap-3">
-            <div className="h-px w-10 bg-indigo-500"></div>
-            <span className="text-sm font-medium tracking-wider text-indigo-600">PREMIUM COLLECTION</span>
+            <div className="h-px w-10 bg-amber-300"></div>
+            <span className="text-sm font-medium tracking-wider text-amber-600">PREMIUM COLLECTION</span>
           </div>
           
           <h1 className="text-4xl lg:text-5xl font-bold text-gray-800 leading-tight">
-            Discover Our <span className="text-indigo-600">Latest Arrivals</span>
+            Discover Our <span className="text-amber-600">Latest Arrivals</span>
           </h1>
           
           <p className="text-gray-600 leading-relaxed">
@@ -26,7 +26,7 @@ const Hero = () => {
           
           <button 
             onClick={() => navigate("/collection")}
-            className="group flex items-center gap-2 bg-gray-900 hover:bg-indigo-700 text-white py-3 px-6 rounded-full transition-all duration-300"
+            className="group flex items-center gap-2 bg-gray-900 hover:bg-amber-600 text-white py-3 px-6 rounded-full transition-all duration-300"
           >
             <span className="font-medium">SHOP NOW</span>
             <ArrowRight size={18} className="transition-transform duration-300 group-hover:translate-x-1" />

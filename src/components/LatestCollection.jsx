@@ -33,9 +33,9 @@ const LatestCollection = () => {
                 <div className="text-center mb-12">
                     <div className="inline-block">
                         <div className="flex items-center justify-center gap-3 mb-3">
-                            <div className="h-px w-8 bg-indigo-500"></div>
-                            <span className="text-sm font-medium tracking-wider text-indigo-600">NEW ARRIVALS</span>
-                            <div className="h-px w-8 bg-indigo-500"></div>
+                            <div className="h-px w-8 bg-amber-500"></div>
+                            <span className="text-sm font-medium tracking-wider text-amber-600">NEW ARRIVALS</span>
+                            <div className="h-px w-8 bg-amber-500"></div>
                         </div>
                         <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Latest Collections</h2>
                     </div>
