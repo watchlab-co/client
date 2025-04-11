@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { ShopContext } from '../context/ShopContext';
 import { assets } from '../assets/assets';
 import RelatedProducts from '../components/RelatedProducts';
@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 
 const Product = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { productId } = useParams();
   const { products = [], currency, addToCart } = useContext(ShopContext);
   const videoRef = useRef(null);
@@ -15,6 +16,27 @@ const Product = () => {
   const [mediaType, setMediaType] = useState('image'); // 'image' or 'video'
   const [selectedMedia, setSelectedMedia] = useState('');
   const [size, setSize] = useState('');
+
+  // Enhanced scroll to top logic that works on all navigation events
+  useEffect(() => {
+    // Immediately scroll to top when component mounts
+    window.scrollTo(0, 0);
+    
+    // Also scroll when the URL changes (for related product navigation)
+    const handleScroll = () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth' // Optional smooth scrolling effect
+      });
+    };
+    
+    handleScroll();
+    
+    // Clean up function
+    return () => {
+      // Any cleanup if needed
+    };
+  }, [productId, location.pathname]);
 
   useEffect(() => {
     const fetchProductData = () => {
