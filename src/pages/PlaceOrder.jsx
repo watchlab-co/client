@@ -1,14 +1,13 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import Title from '../components/Title'
 import CartTotal from '../components/CartTotal'
 import { assets } from '../assets/assets'
 import { ShopContext } from '../context/ShopContext'
 import { toast } from 'react-hot-toast'
 import axios from 'axios'
+import { load } from "@cashfreepayments/cashfree-js"
 
 const PlaceOrder = () => {
-
-
   const [method, setMethod] = useState('cod');
   const { navigate, backendUrl, token, cartItems, setCartItems, getCartAmount, delivery_fee, products } = useContext(ShopContext)
   const [formData, setFormData] = useState({
@@ -21,11 +20,27 @@ const PlaceOrder = () => {
     zipcode: '',
     country: '',
     phone: '',
-
   })
+  const [cashfree, setCashfree] = useState(null);
+
+  // Initialize Cashfree SDK on component mount
+  useEffect(() => {
+    const initializeCashfree = async () => {
+      try {
+        const cashfreeInstance = await load({
+          mode: 'sandbox', // TEST or PROD
+        });
+        setCashfree(cashfreeInstance);
+      } catch (error) {
+        console.error("Failed to initialize Cashfree SDK:", error);
+        toast.error("Failed to initialize payment gateway");
+      }
+    };
+    
+    initializeCashfree();
+  }, []);
 
   const onChangeHandler = (event) => {
-
     const name = event.target.name;
     const value = event.target.value
 
@@ -108,14 +123,51 @@ const PlaceOrder = () => {
           const responseRazorpay = await axios.post(backendUrl + '/api/order/razorpay', orderData, { headers: { token } });
           if (responseRazorpay.data.success) {
             initPay(responseRazorpay.data.order);
+          } else {
+            toast.error(responseRazorpay.data.message);
           }
           break;
-          
 
-          case 'cashfree': // NEW: Cashfree Payment Integration
+        case 'cashfree':
+          if (!cashfree) {
+            toast.error("Payment gateway not initialized. Please try again.");
+            return;
+          }
+          
           const responseCashfree = await axios.post(`${backendUrl}/api/order/cashfree`, orderData, { headers: { token } });
           if (responseCashfree.data.success) {
-            window.location.href = responseCashfree.data.payment_link;
+            console.log("Cashfree response:", responseCashfree.data);
+            
+            let checkoutOptions = {
+              paymentSessionId: responseCashfree.data.order.payment_session_id,
+              redirectTarget: "_modal"
+            }
+
+            try {
+              const result = await cashfree.checkout(checkoutOptions);
+              console.log("Cashfree payment result:", result);
+              
+              // If payment was successful, verify with backend and navigate
+              if (result.order && result.order.status === "PAID") {
+                const verifyResponse = await axios.post(
+                  `${backendUrl}/api/order/verifyCashfree`, 
+                  { orderId: responseCashfree.data.order_id },
+                  { headers: { token } }
+                );
+                
+                if (verifyResponse.data.success) {
+                  setCartItems({});
+                  navigate('/orders');
+                } else {
+                  toast.error("Payment verification failed. Please contact support.");
+                }
+              } else {
+                toast.error("Payment was not completed");
+              }
+            } catch (error) {
+              console.error("Cashfree checkout error:", error);
+              toast.error(error.message || "Payment failed. Please try again.");
+            }
           } else {
             toast.error(responseCashfree.data.message);
           }
@@ -131,11 +183,9 @@ const PlaceOrder = () => {
     }
   };
 
-
   return (
     <form onSubmit={onSubmitHandler} className='flex flex-col sm:flex-row justify-between gap-4 pt-5 sm:pt-14 min-h-[80vh] border-t'>
       {/* Left Side */}
-
       <div className="flex flex-col gap-4 w-full sm:max-w-[480px]">
         <div className="text-xl sm:text-2xl my-3">
           <Title text1={'DELIVERY'} text2={'INFORMATION'} />
@@ -170,11 +220,10 @@ const PlaceOrder = () => {
               <p className={`min-w-3.5 h-3.5 border rounded-full ${method === 'stripe' ? 'bg-green-400' : ''} `}></p>
               <img className='h-5 mx-4' src={assets.stripe_logo} alt="" />
             </div>
-            <div onClick={() => setMethod('cashfree')} className="border p-2 px-3 cursor-pointer">
-              <p className={`min-w-3.5 h-3.5 border rounded-full ${method === 'cashfree' ? 'bg-green-400' : ''}`} />
-              <p className="text-gray-500 text-sm font-medium mx-4">CASHFREE</p>
+            <div onClick={() => setMethod('cashfree')} className='flex items-center gap-3 border p-2 px-3 cursor-pointer'>
+              <p className={`min-w-3.5 h-3.5 border rounded-full ${method === 'cashfree' ? 'bg-green-400' : ''}`}></p>
+              <p className='text-gray-500 text-sm font-medium mx-4'>CASHFREE</p>
             </div>
-
             <div onClick={() => setMethod('razorpay')} className='flex items-center gap-3 border p-2 px-3 cursor-pointer'>
               <p className={`min-w-3.5 h-3.5 border rounded-full ${method === 'razorpay' ? 'bg-green-400' : ''} `}></p>
               <img className='h-5 mx-4' src={assets.razorpay_logo} alt="" />
