@@ -7,7 +7,7 @@ const Hero = () => {
   const navigate = useNavigate();
   
   return (
-    <div className="flex flex-col sm:flex-row border-0 shadow-lg rounded-lg overflow-hidden bg-white">
+    <div className="flex flex-col sm:flex-row border-0  rounded-lg overflow-hidden bg-white">
       {/* Hero Left side - Content */}
       <div className="w-full sm:w-1/2 flex items-center justify-center p-8 sm:p-12 lg:p-16">
         <div className="max-w-md space-y-6">
