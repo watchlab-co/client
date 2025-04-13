@@ -1,18 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { ShopContext } from '../context/ShopContext'
-import Title from '../components/Title'
-import { assets } from '../assets/assets'
-import CartTotal from '../components/CartTotal'
+import React, { useContext, useEffect, useState } from 'react';
+import { ShopContext } from '../context/ShopContext';
+import Title from '../components/Title';
+import { assets } from '../assets/assets';
+import CartTotal from '../components/CartTotal';
+import { Link } from 'react-router-dom';
 
 const Cart = () => {
-
-
-  const { products, currency, cartItems, updateQuantity, navigate } = useContext(ShopContext)
-  const [cartData, setCartData] = useState([])
-
+  const { products, currency, cartItems, updateQuantity, navigate } = useContext(ShopContext);
+  const [cartData, setCartData] = useState([]);
 
   useEffect(() => {
-
     if (products.length > 0) {
       const tempData = [];
       for (const items in cartItems) {
@@ -21,54 +18,90 @@ const Cart = () => {
             tempData.push({
               _id: items,
               size: item,
-              quantity: cartItems[items][item]
-            })
+              quantity: cartItems[items][item],
+            });
           }
         }
       }
-      setCartData(tempData)
+      setCartData(tempData);
     }
-  }, [cartItems, products])
+  }, [cartItems, products]);
 
   return (
-    <div className='border-t pt-14'>
-      <div className="text-2xl mb-3">
+    <div className='border-t pt-14 px-4 sm:px-8'>
+      <div className="text-3xl font-semibold mb-6">
         <Title text1={'YOUR'} text2={'CART'} />
       </div>
-      <div>
-        {
-          cartData.map((item, index) => {
-            const productData = products.find((product) => product._id === item._id)
-            return (
-              <div className='py-4 border-t border-b text-gtay-700 grid grid-cols-[4fr_0.5fr_0.5fr] sm:grid-cols-[4ft_2fr_0.5fr] items-center gap-4' key={index}>
-                <div className='flex items-start gap-6'>
-                  <img className='w-16 sm:w-20' src={productData.image[0]} alt="" />
-                  <div>
-                    <p className='text-xs sm:text-lg font-medium'>{productData.name}</p>
-                    <div className="flex items-center gap-5 mt-5">
-                      <p>{currency}{productData.price}</p>
-                      <p className='px-2 sm:px-3 sm:py-1 border bg-slate-50'>{item.size}</p>
-                    </div>
+
+      <div className="space-y-6">
+        {cartData.map((item, index) => {
+          const productData = products.find(product => product._id === item._id);
+          if (!productData) return null;
+
+          const displayName = productData.name.length > 40
+            ? productData.name.slice(0, 40) + '...'
+            : productData.name;
+
+          const productImage = productData.image?.[0] || assets.placeholder_img;
+
+          return (
+            <div
+              key={index}
+              className='bg-white shadow-md rounded-lg p-4 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4'
+            >
+              <Link
+                to={`/product/${item._id}`}
+                className='flex items-center gap-4 sm:gap-6 w-full sm:w-[60%] hover:opacity-90 transition-all'
+              >
+                <img className='w-20 h-20 object-cover rounded-md' src={productImage} alt="product" />
+                <div className='flex flex-col'>
+                  <p className='text-sm sm:text-lg font-medium text-gray-800'>{displayName}</p>
+                  <div className="flex items-center gap-3 mt-3 text-sm text-gray-600">
+                    <p>{currency}{productData.price}</p>
+                    <p className='px-2 py-1 border border-gray-300 rounded bg-gray-100 text-xs sm:text-sm'>{item.size}</p>
                   </div>
                 </div>
-                <input onChange={(e) => e.target.value === '' || e.target.value === '0' ? null : updateQuantity(item._id, item.size, Number(e.target.value))} className='border max-w-10 sm:max-w-20 px-1 sm:px-2 py-1' type="number" min={1} defaultValue={item.quantity} />
-                <img onClick={() => updateQuantity(item._id, item.size, 0)} className='w-4 mr-4 sm:w-5 cursor-pointer' src={assets.bin_icon} alt="" />
+              </Link>
+
+              <div className='flex items-center gap-4'>
+                <input
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    if (!val || val < 1) return;
+                    updateQuantity(item._id, item.size, val);
+                  }}
+                  className='border rounded w-14 sm:w-20 px-2 py-1 text-center text-sm'
+                  type="number"
+                  min={1}
+                  defaultValue={item.quantity}
+                />
+                <img
+                  onClick={() => updateQuantity(item._id, item.size, 0)}
+                  className='w-5 cursor-pointer hover:scale-110 transition-transform'
+                  src={assets.bin_icon}
+                  alt="delete"
+                />
               </div>
-            )
-          })
-        }
+            </div>
+          );
+        })}
       </div>
-      <div className='flex justify-end my-20 '>
-        <div className="w-full sm:w-[450px]">
+
+      <div className='flex justify-end my-16'>
+        <div className="w-full sm:w-[400px]">
           <CartTotal />
           <div className="w-full text-end">
-            <button onClick={() => navigate('/place-order')} className='bg-black text-white text-sm my-8 px-8 py-3'>PROCEED TO CHECKOUT</button>
+            <button
+              onClick={() => navigate('/place-order')}
+              className='bg-black text-white text-sm font-medium tracking-wide mt-6 px-8 py-3 rounded hover:bg-gray-900 transition-colors'
+            >
+              PROCEED TO CHECKOUT
+            </button>
           </div>
         </div>
       </div>
-
     </div>
-  )
-}
+  );
+};
 
-export default Cart
+export default Cart;
