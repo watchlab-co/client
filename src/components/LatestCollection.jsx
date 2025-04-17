@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { ShopContext } from '../context/ShopContext';
 import Title from './Title';
 import ProductItem from './ProductItem';
+import ProductSkeleton from './ProductSkeleton';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 
@@ -9,18 +10,23 @@ const LatestCollection = () => {
     const navigate = useNavigate();
     const { products } = useContext(ShopContext);
     const [latestProducts, setLatestProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        setLatestProducts(products.slice(0, 10));  // Display only the first 10 products
+        // Simulate loading time (remove this in production)
+        const loadData = async () => {
+            setLoading(true);
+            // In a real app, you might be waiting for an API call here
+            if (products.length > 0) {
+                setTimeout(() => {
+                    setLatestProducts(products.slice(0, 10));
+                    setLoading(false);
+                }, 1500); // Simulating network delay
+            }
+        };
+        
+        loadData();
     }, [products]);
-
-    // Helper function to calculate discounted price
-    const getDiscountedPrice = (price, discount) => {
-        if (discount && discount > 0) {
-            return price - (price * discount / 100);
-        }
-        return null;  // Return null if there's no discount
-    };
 
     const handleSeeMore = () => {
         navigate('/collection');
@@ -62,25 +68,30 @@ const LatestCollection = () => {
                     </div>
                 </div>
 
-                {/* Products Grid */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 gap-y-10">
-                    {latestProducts.map((item, index) => (
-                        <ProductItem 
-                            key={index} 
-                            id={item._id} 
-                            image={item.image} 
-                            name={item.name} 
-                            price={item.price} 
-                            discount={item.discount || ''} 
-                        />
-                    ))}
-                </div>
+                {/* Products Grid with Loading State */}
+                {loading ? (
+                    <ProductSkeleton count={5} />
+                ) : (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 gap-y-10">
+                        {latestProducts.map((item, index) => (
+                            <ProductItem 
+                                key={index} 
+                                id={item._id} 
+                                image={item.image} 
+                                name={item.name} 
+                                price={item.price} 
+                                discount={item.discount || ''} 
+                            />
+                        ))}
+                    </div>
+                )}
 
                 {/* See More Button */}
                 <div className="flex justify-center mt-12">
                     <button
                         onClick={handleSeeMore}
                         className="group flex items-center gap-2 bg-amber-600 text-white px-8 py-3 rounded-full shadow-md transition-all duration-300 hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        disabled={loading}
                     >
                         <span className="font-medium">View Collection</span>
                         <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
