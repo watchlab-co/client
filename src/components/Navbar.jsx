@@ -44,7 +44,7 @@ const Navbar = () => {
     <>
       {/* Top announcement bar */}
       <div className="bg-gray-900 text-white py-2 text-center text-sm">
-        Free shipping on all orders over $100 | Use code WATCH15 for 15% off
+        Free shipping on all orders over Rs 1000 
       </div>
 
       {/* Main navbar */}

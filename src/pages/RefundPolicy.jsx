@@ -8,7 +8,7 @@ const RefundPolicy = () => {
       <p className="mt-4">However, if you receive a damaged product, you can request a refund by providing a clear **unboxing video** as proof.</p>
       <p className="mt-4">For refund requests, contact us within 24 hours of delivery at:</p>
       <p className="mt-2 font-semibold">📧 Email: support@watchlab.in</p>
-      <p className="font-semibold">📞 Phone: 9744676504</p>
+      <p className="font-semibold">📞 Phone: 8075725539</p>
     </div>
   );
 };

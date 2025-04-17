@@ -4,7 +4,7 @@ const ShippingPolicy = () => {
   return (
     <div className="max-w-3xl mx-auto my-10 p-6 bg-white shadow-lg rounded-lg">
       <h1 className="text-2xl font-bold mb-4">Shipping Policy</h1>
-      
+
       <h2 className="text-lg font-semibold mt-4">📦 Shipping Time</h2>
       <p>Orders are processed within 1-2 business days. Delivery times vary based on location:</p>
       <ul className="list-disc pl-6 mt-2 space-y-2">
@@ -24,7 +24,7 @@ const ShippingPolicy = () => {
       <h2 className="text-lg font-semibold mt-4">📞 Contact Us</h2>
       <p>For shipping-related queries, contact us at:</p>
       <p className="mt-2 font-semibold">📧 Email: support@watchlab.in</p>
-      <p className="font-semibold">📞 Phone: 9744676504</p>
+      <p className="font-semibold">📞 Phone: 8075725539</p>
     </div>
   );
 };

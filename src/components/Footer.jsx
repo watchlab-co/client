@@ -9,7 +9,7 @@ const Footer = () => {
                 <div>
                     <p className="text-3xl font-bold mb-5 text-gray-800">WatchLab</p>
                     <p className="w-full md:w-2/3 text-gray-600">
-                        At WatchLab, we are passionate about curating the finest timepieces that blend craftsmanship, innovation, and style. 
+                        At WatchLab, we are passionate about curating the finest timepieces that blend craftsmanship, innovation, and style.
                         Whether you're a seasoned collector or a first-time buyer, WatchLab brings you a collection that promises unmatched quality and timeless appeal.
                     </p>
                 </div>
@@ -43,7 +43,7 @@ const Footer = () => {
                     <ul className='flex flex-col gap-1 text-gray-600'>
                         <li>📍Malappuram, Kerala, India</li>
                         <li>📧 <a href="mailto:support@watchlab.in">support@watchlab.in</a></li>
-                        <li>📞 <a href="tel:+919744676504">+91 9744676504</a></li>
+                        <li>📞 <a href="tel:+918075725539">+91 8075725539</a></li>
                     </ul>
                 </div>
             </div>

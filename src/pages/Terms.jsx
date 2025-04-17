@@ -12,7 +12,7 @@ const Terms = () => {
       </ul>
       <p className="mt-4">For questions, contact:</p>
       <p className="mt-2 font-semibold">📧 support@watchlab.in</p>
-      <p className="font-semibold">📞 9744676504</p>
+      <p className="font-semibold">📞 8075725539</p>
     </div>
   );
 };
