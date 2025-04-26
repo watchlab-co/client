@@ -28,7 +28,7 @@ const PlaceOrder = () => {
     const initializeCashfree = async () => {
       try {
         const cashfreeInstance = await load({
-          mode: 'sandbox', // TEST or PROD
+          mode: 'production', // TEST or PROD
         });
         setCashfree(cashfreeInstance);
       } catch (error) {
@@ -145,6 +145,7 @@ const PlaceOrder = () => {
               );
               
               if (verifyResponse.data.success) {
+                toast.success("Payment verified successfully!");
                 setCartItems({});
                 navigate('/orders');
               } else {
