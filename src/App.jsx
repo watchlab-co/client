@@ -19,6 +19,10 @@ import Terms from './pages/Terms';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import FAQs from './pages/FAQs';
 import ShippingPolicy from './pages/ShippingPolicy';
+import PaymentPolicy from './pages/PaymentPolicy';
+import WarrantyPolicy from './pages/WarrantyPolicy';
+import FAQ from './pages/FAQs';
+import ReturnPolicy from './pages/ReturnPolicy';
 
 const App = () => {
   return (
@@ -49,8 +53,11 @@ const App = () => {
           <Route path='/refund-policy' element={<RefundPolicy />} />
           <Route path='/terms-and-conditions' element={<Terms />} />
           <Route path='/privacy-policy' element={<PrivacyPolicy />} />
-          <Route path='/faqs' element={<FAQs />} />
+          <Route path='/faqs' element={<FAQ />} />
           <Route path='/shipping-policy' element={<ShippingPolicy />} />
+          <Route path='/payment-policy' element={<PaymentPolicy />} />
+          <Route path='/warranty-policy' element={<WarrantyPolicy />} />
+          <Route path='/return-policy' element={<ReturnPolicy />} />
         </Routes>
       </main>
       

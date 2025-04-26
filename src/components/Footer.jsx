@@ -22,6 +22,7 @@ const Footer = () => {
                         <li><Link to="/about">About Us</Link></li>
                         <li><Link to="/collection">Collection</Link></li>
                         <li><Link to="/contact">Contact Us</Link></li>
+                        <a target='_blank' href="https://tally.so/r/wMP6vA"> Submit Feedback</a>
                     </ul>
                 </div>
 
@@ -34,18 +35,26 @@ const Footer = () => {
                         <li><Link to="/shipping-policy">Shipping Policy</Link></li>
                         <li><Link to="/terms-and-conditions">Terms & Conditions</Link></li>
                         <li><Link to="/privacy-policy">Privacy Policy</Link></li>
+                        <li><Link to="/warranty-policy">Warranty policy</Link></li>
+                        <li><Link to="/return-policy">Return policy</Link></li>
+                        <li><Link to="/faqs">FAQ</Link></li>
                     </ul>
-                </div>
+                </div>  
 
                 {/* Contact Info */}
                 <div>
-                    <p className='text-xl font-medium mb-5'>GET IN TOUCH</p>
-                    <ul className='flex flex-col gap-1 text-gray-600'>
-                        <li>📍Malappuram, Kerala, India</li>
-                        <li>📧 <a href="mailto:support@watchlab.in">support@watchlab.in</a></li>
-                        <li>📞 <a href="tel:+918075725539">+91 8075725539</a></li>
+                    <p className="text-xl font-semibold mb-5">Get in Touch (24/7)</p>
+                    <ul className="flex flex-col gap-2 text-gray-700">
+                        <li>📍 Malappuram, Kerala, India</li>
+                        <li>
+                            📧 <a>support@watchlab.in & officialwatchlab@gmail.com</a>
+                        </li>
+                        <li>
+                            📞 <a href="tel:+918075725539" className="hover:underline">+91 8075725539</a>
+                        </li>
                     </ul>
                 </div>
+
             </div>
 
             {/* Copyright Section */}
