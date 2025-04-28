@@ -36,7 +36,7 @@ const PlaceOrder = () => {
         toast.error("Failed to initialize payment gateway");
       }
     };
-    
+
     initializeCashfree();
   }, []);
 
@@ -124,7 +124,7 @@ const PlaceOrder = () => {
             toast.error("Payment gateway not initialized. Please try again.");
             return;
           }
-          
+
           const responseCashfree = await axios.post(backendUrl + '/api/order/cashfree', orderData, { headers: { token } });
           if (responseCashfree.data.success) {
             console.log("Cashfree response:", responseCashfree.data);
@@ -136,14 +136,14 @@ const PlaceOrder = () => {
               const result = await cashfree.checkout(checkoutOptions);
               toast.success("Payment successful! Verifying...");
               console.log("Cashfree result:", result.paymentDetails.paymentMessage);
-              
+
               // If payment was successful, verify with backend and navigate
               const verifyResponse = await axios.post(
-                backendUrl + '/api/order/verifyCashfree', 
+                backendUrl + '/api/order/verifyCashfree',
                 { orderId: responseCashfree.data.order.order_id },
                 { headers: { token } }
               );
-              
+
               if (verifyResponse.data.success) {
                 toast.success("Payment verified successfully!");
                 setCartItems({});
@@ -151,7 +151,7 @@ const PlaceOrder = () => {
               } else {
                 toast.error("Payment verification failed. Please contact support.");
               }
-              
+
             } catch (error) {
               console.error("Cashfree checkout error:", error);
               toast.error(error.message || "Payment failed. Please try again.");
@@ -210,19 +210,19 @@ const PlaceOrder = () => {
               <p className='min-w-3.5 h-3.5 border rounded-full'></p>
               <img className='h-5 mx-4' src={assets.stripe_logo} alt="Stripe" />
             </div>
-            
+
             {/* Cashfree - Active */}
             <div onClick={() => setMethod('cashfree')} className='flex items-center gap-3 border p-2 px-3 cursor-pointer'>
               <p className={`min-w-3.5 h-3.5 border rounded-full ${method === 'cashfree' ? 'bg-green-400' : ''}`}></p>
               <p className='text-gray-500 text-sm font-medium mx-4'>CASHFREE</p>
             </div>
-            
+
             {/* Razorpay - Disabled */}
             <div className='flex items-center gap-3 border p-2 px-3 cursor-not-allowed opacity-50'>
               <p className='min-w-3.5 h-3.5 border rounded-full'></p>
               <img className='h-5 mx-4' src={assets.razorpay_logo} alt="Razorpay" />
             </div>
-            
+
             {/* COD - Commented out as in original code
             <div onClick={() => setMethod('cod')} className='flex items-center gap-3 border p-2 px-3 cursor-pointer'>
               <p className={`min-w-3.5 h-3.5 border rounded-full ${method === 'cod' ? 'bg-green-400' : ''}`}></p>
@@ -231,6 +231,11 @@ const PlaceOrder = () => {
           </div>
 
           <div className='w-full text-end mt-8'>
+            <p className="text-sm text-gray-500 mb-4">
+              By placing your order, you agree to our{' '}
+              <a href="/terms-and-conditions" className="text-blue-500 hover:underline">Terms & Conditions</a> and{' '}
+              <a href="/privacy-policy" className="text-blue-500 hover:underline">Privacy Policy</a>.
+            </p>
             <button type='submit' className='bg-black text-white px-16 py-3 text-sm'>PLACE ORDER</button>
           </div>
         </div>
