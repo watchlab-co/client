@@ -47,7 +47,7 @@ const Footer = () => {
                     <ul className="flex flex-col gap-2 text-gray-700">
                         <li>📍 Malappuram, Kerala, India</li>
                         <li>
-                            📧 <a>support@watchlab.in & officialwatchlab@gmail.com</a>
+                            📧 <a>support@watchlab.in </a>
                         </li>
                         <li>
                             📞 <a href="tel:+918075725539" className="hover:underline">+91 8075725539</a>
