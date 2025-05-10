@@ -15,7 +15,7 @@ const Contact = () => {
           <p className='font-semibold text-xl text-gray-600' >Watch Lab</p>
           <p className='text-gray-500'>Malappuram <br />Kerala, India</p>
           <p className='text-gray-500' >Tel : (+91) 8075725539 <br /> support@watchlab.in</p>
-          <p className='font-semibold text-xl text-gray-600'>Careers at Wacthlab</p>
+          <p className='font-semibold text-xl text-gray-600'>Careers at Wacthlab </p>
           <p className='text-gray-500'>Learn more about our teams and job openings.</p>
           <button className=' border border-black px-8 py-4 text-sm hover:bg-black hover:text-white transition-all duration-500'>Explore Jobs</button>
         </div>

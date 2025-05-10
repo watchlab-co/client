@@ -16,7 +16,7 @@ const Collection = () => {
 
   // Available brands for filtering
   const availableBrands = [
-    "Rolex", "Casio", "Seiko", "Fossil", "Rado", "Patek Philippe", "Cartier", "Tissot"
+    "Rolex", "Casio", "Seiko", "Fossil", "Rado", "PatekPhilippe", "Cartier", "Tissot"
   ];
 
   // Toggle category selection
