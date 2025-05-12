@@ -11,6 +11,23 @@ const Login = () => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  
+    useEffect(() => {
+      window.scrollTo(0, 0);
+      
+      const handleScroll = () => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      };
+      
+      handleScroll();
+      
+      return () => {
+        // Cleanup if needed
+      };
+    }, []);
 
   const onSubmitHandler = async (evwnt) => {
     event.preventDefault();
