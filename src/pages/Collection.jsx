@@ -1,139 +1,279 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useCallback, useMemo } from 'react';
 import { ShopContext } from '../context/ShopContext';
 import { assets } from '../assets/assets';
 import Title from '../components/Title';
 import ProductItem from '../components/ProductItem';
 
+// Constants for better maintenance
+const CATEGORIES = ['Men', 'Women', 'Couple'];
+const BRANDS = [
+  "Rolex", "Casio", "Seiko", "Fossil", "Rado", "PatekPhilippe", "Cartier", "Tissot"
+];
+const SORT_OPTIONS = {
+  relevant: { label: 'Sort by: Relevant', fn: null },
+  'low-high': { label: 'Price: Low to High', fn: (a, b) => (a.price || a.discount || 0) - (b.price || b.discount || 0) },
+  'high-low': { label: 'Price: High to Low', fn: (a, b) => (b.price || b.discount || 0) - (a.price || a.discount || 0) },
+  newest: { label: 'Newest First', fn: (a, b) => new Date(b.createdAt) - new Date(a.createdAt) },
+  bestselling: { label: 'Best Selling', fn: (a, b) => (b.sold || 0) - (a.sold || 0) }
+};
+const DEFAULT_PRICE_RANGE = { min: 0, max: 10000 };
+const PRODUCTS_PER_PAGE = 12;
+
 const Collection = () => {
   const [showFilter, setShowFilter] = useState(false);
-  const [filterProducts, setFilterProducts] = useState([]);
   const { products, search, showSearch, currency } = useContext(ShopContext);
   const [category, setCategory] = useState([]);
   const [subCategory, setSubCategory] = useState([]);
   const [sortType, setSortType] = useState('relevant');
   const [isLoading, setIsLoading] = useState(true);
-  const [priceRange, setPriceRange] = useState({ min: 0, max: 10000 });
+  const [priceRange, setPriceRange] = useState(DEFAULT_PRICE_RANGE);
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  
+  // Memoize filtered products to prevent unnecessary recalculations
+  const filteredProducts = useMemo(() => {
+    let result = [...products];
 
-  // Available brands for filtering
-  const availableBrands = [
-    "Rolex", "Casio", "Seiko", "Fossil", "Rado", "PatekPhilippe", "Cartier", "Tissot"
-  ];
-
-  // Toggle category selection
-  const toggleCategory = (e) => {
-    if (category.includes(e.target.value)) {
-      setCategory(prev => prev.filter(item => item !== e.target.value));
-    } else {
-      setCategory(prev => [...prev, e.target.value]);
-    }
-  };
-
-  // Toggle subcategory selection
-  const toggleSubCategory = (e) => {
-    if (subCategory.includes(e.target.value)) {
-      setSubCategory(prev => prev.filter(item => item !== e.target.value));
-    } else {
-      setSubCategory(prev => [...prev, e.target.value]);
-    }
-  };
-
-  // Clear all filters
-  const clearFilters = () => {
-    setCategory([]);
-    setSubCategory([]);
-    setPriceRange({ min: 0, max: 10000 });
-    setSortType('relevant');
-    
-    // Reset all checkboxes
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach(checkbox => {
-      checkbox.checked = false;
-    });
-    
-    // Reset price range inputs
-    const minInput = document.getElementById('min-price');
-    const maxInput = document.getElementById('max-price');
-    if (minInput) minInput.value = 0;
-    if (maxInput) maxInput.value = 10000;
-  };
-
-  // Apply filters to the products
-  const applyFilter = () => {
-    setIsLoading(true);
-    let productsCopy = products.slice();
-
-    // Search filter
+    // Apply search filter
     if (showSearch && search) {
-      productsCopy = productsCopy.filter(item =>
+      result = result.filter(item =>
         item.name.toLowerCase().includes(search.toLowerCase())
       );
     }
 
-    // Category filter
+    // Apply category filter
     if (category.length > 0) {
-      productsCopy = productsCopy.filter(item => category.includes(item.category));
+      result = result.filter(item => category.includes(item.category));
     }
 
-    // Subcategory (brand) filter
+    // Apply subcategory filter
     if (subCategory.length > 0) {
-      productsCopy = productsCopy.filter(item => subCategory.includes(item.subCategory));
+      result = result.filter(item => subCategory.includes(item.subCategory));
     }
 
-    // Price range filter
-    productsCopy = productsCopy.filter(item => {
-      const itemPrice = item.price || item.discount;
+    // Apply price range filter
+    result = result.filter(item => {
+      const itemPrice = item.price || item.discount || 0;
       return itemPrice >= priceRange.min && itemPrice <= priceRange.max;
     });
 
-    setFilterProducts(productsCopy);
-    setTimeout(() => setIsLoading(false), 300); // Add a small delay to show loading state
-  };
-
-  // Sort products
-  const sortProduct = () => {
-    let fpCopy = filterProducts.slice();
-
-    switch (sortType) {
-      case 'low-high':
-        setFilterProducts(fpCopy.sort((a, b) => (a.price || 0) - (b.price || 0)));
-        break;
-      case 'high-low':
-        setFilterProducts(fpCopy.sort((a, b) => (b.price || 0) - (a.price || 0)));
-        break;
-      case 'newest':
-        setFilterProducts(fpCopy.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
-        break;
-      case 'bestselling':
-        setFilterProducts(fpCopy.sort((a, b) => (b.sold || 0) - (a.sold || 0)));
-        break;
-      default:
-        applyFilter();
-        break;
+    // Apply sorting
+    const sortFn = SORT_OPTIONS[sortType]?.fn;
+    if (sortFn) {
+      result.sort(sortFn);
     }
-  };
+
+    return result;
+  }, [products, search, showSearch, category, subCategory, priceRange, sortType]);
+  
+  // Calculate pagination data
+  const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
+  const paginatedProducts = useMemo(() => {
+    const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
+    return filteredProducts.slice(startIndex, startIndex + PRODUCTS_PER_PAGE);
+  }, [filteredProducts, currentPage]);
+  
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [category, subCategory, search, priceRange, sortType]);
+
+  // Toggle category selection - memoized to prevent recreating on every render
+  const toggleCategory = useCallback((e) => {
+    const value = e.target.value;
+    setCategory(prev => 
+      prev.includes(value) 
+        ? prev.filter(item => item !== value) 
+        : [...prev, value]
+    );
+  }, []);
+
+  // Toggle subcategory selection - memoized callback
+  const toggleSubCategory = useCallback((e) => {
+    const value = e.target.value;
+    setSubCategory(prev => 
+      prev.includes(value) 
+        ? prev.filter(item => item !== value) 
+        : [...prev, value]
+    );
+  }, []);
+
+  // Clear all filters
+  const clearFilters = useCallback(() => {
+    setCategory([]);
+    setSubCategory([]);
+    setPriceRange(DEFAULT_PRICE_RANGE);
+    setSortType('relevant');
+    setCurrentPage(1);
+    
+    // Reset checkboxes
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+      checkbox.checked = false;
+    });
+    
+    // Reset price inputs
+    const minInput = document.getElementById('min-price');
+    const maxInput = document.getElementById('max-price');
+    if (minInput) minInput.value = DEFAULT_PRICE_RANGE.min;
+    if (maxInput) maxInput.value = DEFAULT_PRICE_RANGE.max;
+  }, []);
 
   // Handle price range changes
-  const handlePriceChange = (e, type) => {
+  const handlePriceChange = useCallback((e, type) => {
     const value = parseInt(e.target.value);
-    setPriceRange(prev => ({
-      ...prev,
-      [type]: value
-    }));
-  };
+    if (!isNaN(value)) {
+      setPriceRange(prev => ({
+        ...prev,
+        [type]: value
+      }));
+    }
+  }, []);
+  
+  // Handle page change
+  const changePage = useCallback((pageNumber) => {
+    // Ensure page number is within valid range
+    const validPage = Math.max(1, Math.min(pageNumber, totalPages));
+    setCurrentPage(validPage);
+    
+    // Scroll to top when page changes
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  }, [totalPages]);
 
-  useEffect(() => {
-    applyFilter();
-  }, [category, subCategory, search, showSearch, products, priceRange]);
-
-  useEffect(() => {
-    sortProduct();
-  }, [sortType]);
-
-  // Set loading state when component mounts
+  // Loading effect
   useEffect(() => {
     setIsLoading(true);
-    setTimeout(() => setIsLoading(false), 500);
+    const timer = setTimeout(() => setIsLoading(false), 500);
+    return () => clearTimeout(timer);
   }, []);
+
+  // Pagination controls component
+  const PaginationControls = () => {
+    if (totalPages <= 1) return null;
+    
+    const renderPageNumbers = () => {
+      const pages = [];
+      const maxPagesToShow = 5;
+      
+      let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+      let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+      
+      // Adjust if we're at the end
+      if (endPage - startPage + 1 < maxPagesToShow) {
+        startPage = Math.max(1, endPage - maxPagesToShow + 1);
+      }
+      
+      // Always show first page
+      if (startPage > 1) {
+        pages.push(
+          <button 
+            key="1" 
+            onClick={() => changePage(1)}
+            className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-gray-100"
+          >
+            1
+          </button>
+        );
+        
+        // Add ellipsis if there's a gap
+        if (startPage > 2) {
+          pages.push(
+            <span key="start-ellipsis" className="w-8 h-8 flex items-center justify-center">...</span>
+          );
+        }
+      }
+      
+      // Add page numbers
+      for (let i = startPage; i <= endPage; i++) {
+        pages.push(
+          <button 
+            key={i} 
+            onClick={() => changePage(i)}
+            className={`w-8 h-8 flex items-center justify-center rounded-md ${
+              currentPage === i 
+                ? 'bg-blue-600 text-white' 
+                : 'hover:bg-gray-100'
+            }`}
+          >
+            {i}
+          </button>
+        );
+      }
+      
+      // Always show last page
+      if (endPage < totalPages) {
+        // Add ellipsis if there's a gap
+        if (endPage < totalPages - 1) {
+          pages.push(
+            <span key="end-ellipsis" className="w-8 h-8 flex items-center justify-center">...</span>
+          );
+        }
+        
+        pages.push(
+          <button 
+            key={totalPages} 
+            onClick={() => changePage(totalPages)}
+            className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-gray-100"
+          >
+            {totalPages}
+          </button>
+        );
+      }
+      
+      return pages;
+    };
+    
+    return (
+      <div className="flex items-center justify-center mt-8 space-x-1">
+        {/* Previous button */}
+        <button 
+          onClick={() => changePage(currentPage - 1)} 
+          disabled={currentPage === 1}
+          className={`px-2 py-1 rounded-md ${
+            currentPage === 1 
+              ? 'text-gray-400 cursor-not-allowed' 
+              : 'hover:bg-gray-100'
+          }`}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+          </svg>
+        </button>
+        
+        {/* Page numbers */}
+        {renderPageNumbers()}
+        
+        {/* Next button */}
+        <button 
+          onClick={() => changePage(currentPage + 1)} 
+          disabled={currentPage === totalPages}
+          className={`px-2 py-1 rounded-md ${
+            currentPage === totalPages 
+              ? 'text-gray-400 cursor-not-allowed' 
+              : 'hover:bg-gray-100'
+          }`}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+          </svg>
+        </button>
+      </div>
+    );
+  };
+
+  // Render loading skeletons
+  const renderSkeletons = () => {
+    return [...Array(PRODUCTS_PER_PAGE)].map((_, idx) => (
+      <div key={idx} className="animate-pulse">
+        <div className="bg-gray-200 rounded-lg h-48 mb-3"></div>
+        <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+        <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+      </div>
+    ));
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -168,12 +308,13 @@ const Collection = () => {
               <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-200">
                 <h3 className="font-medium text-gray-900 mb-3">Categories</h3>
                 <div className="space-y-2">
-                  {['Men', 'Women', 'Couple'].map((cat, idx) => (
-                    <div key={idx} className="flex items-center">
+                  {CATEGORIES.map((cat) => (
+                    <div key={cat} className="flex items-center">
                       <input
                         id={`category-${cat}`}
                         type="checkbox"
                         value={cat}
+                        checked={category.includes(cat)}
                         onChange={toggleCategory}
                         className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                       />
@@ -189,12 +330,13 @@ const Collection = () => {
               <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-200">
                 <h3 className="font-medium text-gray-900 mb-3">Brands</h3>
                 <div className="max-h-60 overflow-y-auto space-y-2">
-                  {availableBrands.map((brand, idx) => (
-                    <div key={idx} className="flex items-center">
+                  {BRANDS.map((brand) => (
+                    <div key={brand} className="flex items-center">
                       <input
                         id={`brand-${brand}`}
                         type="checkbox"
                         value={brand}
+                        checked={subCategory.includes(brand)}
                         onChange={toggleSubCategory}
                         className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                       />
@@ -258,7 +400,15 @@ const Collection = () => {
             {/* Products count and sort options */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full sm:w-auto">
               <p className="text-sm text-gray-600">
-                Showing <span className="font-medium">{filterProducts.length}</span> products
+                Showing <span className="font-medium">
+                  {Math.min(
+                    (currentPage - 1) * PRODUCTS_PER_PAGE + 1,
+                    filteredProducts.length
+                  )} - {Math.min(
+                    currentPage * PRODUCTS_PER_PAGE,
+                    filteredProducts.length
+                  )}
+                </span> of <span className="font-medium">{filteredProducts.length}</span> products
               </p>
               
               <select
@@ -266,11 +416,9 @@ const Collection = () => {
                 onChange={(e) => setSortType(e.target.value)}
                 className="text-sm border border-gray-300 rounded px-3 py-2 bg-white focus:ring-blue-500 focus:border-blue-500 w-full sm:w-auto"
               >
-                <option value="relevant">Sort by: Relevant</option>
-                <option value="low-high">Price: Low to High</option>
-                <option value="high-low">Price: High to Low</option>
-                <option value="newest">Newest First</option>
-                <option value="bestselling">Best Selling</option>
+                {Object.entries(SORT_OPTIONS).map(([value, { label }]) => (
+                  <option key={value} value={value}>{label}</option>
+                ))}
               </select>
             </div>
           </div>
@@ -279,27 +427,26 @@ const Collection = () => {
           {isLoading ? (
             // Loading skeleton
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-8">
-              {[...Array(8)].map((_, idx) => (
-                <div key={idx} className="animate-pulse">
-                  <div className="bg-gray-200 rounded-lg h-48 mb-3"></div>
-                  <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded w-1/4"></div>
-                </div>
-              ))}
+              {renderSkeletons()}
             </div>
-          ) : filterProducts.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-8">
-              {filterProducts.map((item, index) => (
-                <ProductItem 
-                  key={index} 
-                  id={item._id} 
-                  name={item.name} 
-                  image={item.image} 
-                  price={item.price} 
-                  discount={item.discount || ''} 
-                />
-              ))}
-            </div>
+          ) : filteredProducts.length > 0 ? (
+            <>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-8">
+                {paginatedProducts.map((item, index) => (
+                  <ProductItem 
+                    key={item._id || index} 
+                    id={item._id} 
+                    name={item.name} 
+                    image={item.image} 
+                    price={item.price} 
+                    discount={item.discount || ''} 
+                  />
+                ))}
+              </div>
+              
+              {/* Pagination controls */}
+              <PaginationControls />
+            </>
           ) : (
             // No products found
             <div className="flex flex-col items-center justify-center py-12 px-4 text-center">

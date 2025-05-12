@@ -13,19 +13,10 @@ const LatestCollection = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Simulate loading time (remove this in production)
-        const loadData = async () => {
-            setLoading(true);
-            // In a real app, you might be waiting for an API call here
-            if (products.length > 0) {
-                setTimeout(() => {
-                    setLatestProducts(products.slice(0, 10));
-                    setLoading(false);
-                }, 1500); // Simulating network delay
-            }
-        };
-        
-        loadData();
+        if (products.length > 0) {
+            setLatestProducts(products.slice(0, 10));
+            setLoading(false);
+        }
     }, [products]);
 
     const handleSeeMore = () => {
@@ -50,32 +41,32 @@ const LatestCollection = () => {
                     </p>
                 </div>
 
-                {/* Filtering Tabs (optional) */}
+                {/* Tabs (optional) */}
                 <div className="flex justify-center mb-8">
                     <div className="inline-flex rounded-md shadow-sm">
-                        <button className="px-4 py-2 text-sm font-medium text-indigo-600 bg-white border border-indigo-200 rounded-l-lg hover:bg-indigo-50">
-                            All
-                        </button>
-                        <button className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border-t border-b border-r border-gray-200 hover:bg-gray-50">
-                            Watches
-                        </button>
-                        <button className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border-t border-b border-r border-gray-200 hover:bg-gray-50">
-                            Accessories
-                        </button>
-                        <button className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border-t border-b border-r border-gray-200 rounded-r-lg hover:bg-gray-50">
-                            Limited Edition
-                        </button>
+                        {['All', 'Watches', 'Accessories', 'Limited Edition'].map((label, idx) => (
+                            <button
+                                key={idx}
+                                className={`px-4 py-2 text-sm font-medium ${
+                                    idx === 0 ? 'text-indigo-600 border-indigo-200 rounded-l-lg' : 'text-gray-700 border-gray-200'
+                                } bg-white border hover:bg-gray-50 ${
+                                    idx === 3 ? 'rounded-r-lg' : ''
+                                }`}
+                            >
+                                {label}
+                            </button>
+                        ))}
                     </div>
                 </div>
 
-                {/* Products Grid with Loading State */}
+                {/* Products */}
                 {loading ? (
                     <ProductSkeleton count={5} />
                 ) : (
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 gap-y-10">
                         {latestProducts.map((item, index) => (
                             <ProductItem 
-                                key={index} 
+                                key={item._id || index}
                                 id={item._id} 
                                 image={item.image} 
                                 name={item.name} 
