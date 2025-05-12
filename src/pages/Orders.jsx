@@ -12,36 +12,43 @@ const Orders = () => {
   const loadOrderData = async () => {
 
     try {
-      
-      if(!token){
+
+      if (!token) {
         return null
       }
 
-      const response = await axios.post(backendUrl + '/api/order/userorders',{},{headers:{token}})
-      if(response.data.success){
-       let allOrdersItem = []
-       response.data.orders.map((order)=>{
-        order.items.map((item)=>{
-          item['status'] = order.status
-          item['payment'] = order.payment
-          item['paymentMethod'] = order.paymentMethod
-          item['date'] = order.date
-          allOrdersItem.push(item)
-        })
-       })
-       setOrderData(allOrdersItem.reverse())
+      const response = await axios.post(backendUrl + '/api/order/userorders', {}, { headers: { token } })
+      console.log('====================================');
+      console.log(response.data);
+      console.log('====================================');
+      if (response.data.success) {
+        let allOrdersItem = [];
+
+        response.data.orders.forEach((order) => {
+          if (order.paymentStatus === "PAID") {  // ✅ Only process if order is PAID
+            order.items.forEach((item) => {
+              item['status'] = order.status;
+              item['payment'] = order.payment;
+              item['paymentMethod'] = order.paymentMethod;
+              item['date'] = order.date;
+              allOrdersItem.push(item);
+            });
+          }
+        });
+
+        setOrderData(allOrdersItem.reverse());  // Show latest first
       }
     } catch (error) {
-      
+      console.log(error)
     }
 
   }
 
-  useEffect(()=>{
-    
-      loadOrderData()
-    
-  },[token])
+  useEffect(() => {
+
+    loadOrderData()
+
+  }, [token])
 
   return (
     <div className='border-t pt-16'>
