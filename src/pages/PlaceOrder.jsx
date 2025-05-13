@@ -231,6 +231,10 @@ const PlaceOrder = () => {
           </div>
 
           <div className='w-full text-end mt-8'>
+            <p className="text-xs text-yellow-600 mb-2">
+              Note: If Google Pay doesn’t work, try using PhonePe, Paytm, or UPI.
+            </p>
+
             <p className="text-sm text-gray-500 mb-4">
               By placing your order, you agree to our{' '}
               <a href="/terms-and-conditions" className="text-blue-500 hover:underline">Terms & Conditions</a> and{' '}
