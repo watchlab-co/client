@@ -17,7 +17,7 @@ const SORT_OPTIONS = {
   bestselling: { label: 'Best Selling', fn: (a, b) => (b.sold || 0) - (a.sold || 0) }
 };
 const DEFAULT_PRICE_RANGE = { min: 0, max: 10000 };
-const PRODUCTS_PER_PAGE = 12;
+const PRODUCTS_PER_PAGE = 25;
 
 const Collection = () => {
   const [showFilter, setShowFilter] = useState(false);
