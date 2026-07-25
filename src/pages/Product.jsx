@@ -253,7 +253,13 @@ const Product = () => {
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
-            In Stock
+            {productData.inventoryCount !== undefined && productData.inventoryCount !== null
+              ? productData.inventoryCount > 0
+                ? `In Stock (${productData.inventoryCount} available)`
+                : 'Out of Stock'
+              : productData.stock
+                ? 'In Stock'
+                : 'Out of Stock'}
           </div>
           
           <p className="mt-5 text-gray-600 md:w-4/5 leading-relaxed whitespace-pre-line">{productData.description}</p>
@@ -274,6 +280,12 @@ const Product = () => {
           <div className="mt-6 border rounded-sm overflow-hidden">
             <table className="w-full text-sm">
               <tbody>
+                {productData.productType && (
+                  <tr className="border-b">
+                    <td className="py-2 px-4 font-medium bg-gray-50">Type</td>
+                    <td className="py-2 px-4">{productData.productType}</td>
+                  </tr>
+                )}
                 {productData.movement && (
                   <tr className="border-b">
                     <td className="py-2 px-4 font-medium bg-gray-50">Movement</td>
@@ -282,7 +294,9 @@ const Product = () => {
                 )}
                 {productData.strapMaterial && (
                   <tr className="border-b">
-                    <td className="py-2 px-4 font-medium bg-gray-50">Strap Material</td>
+                    <td className="py-2 px-4 font-medium bg-gray-50">
+                      {productData.productType === 'Clock' ? 'Case / Frame Material' : 'Strap Material'}
+                    </td>
                     <td className="py-2 px-4">{productData.strapMaterial}</td>
                   </tr>
                 )}
