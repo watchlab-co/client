@@ -261,6 +261,15 @@ const Product = () => {
                 ? 'In Stock'
                 : 'Out of Stock'}
           </div>
+
+          <div className={`mt-2 text-sm flex items-center ${productData.freeDelivery || !productData.deliveryCharge ? 'text-green-600' : 'text-gray-700'}`}>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+            </svg>
+            {productData.freeDelivery || Number(productData.deliveryCharge) === 0
+              ? 'Free Delivery'
+              : `Delivery Charge: ${currency}${productData.deliveryCharge}`}
+          </div>
           
           <p className="mt-5 text-gray-600 md:w-4/5 leading-relaxed whitespace-pre-line">{productData.description}</p>
 
@@ -303,6 +312,14 @@ const Product = () => {
                 <tr>
                   <td className="py-2 px-4 font-medium bg-gray-50">Category</td>
                   <td className="py-2 px-4">{productData.category} / {productData.subCategory}</td>
+                </tr>
+                <tr>
+                  <td className="py-2 px-4 font-medium bg-gray-50">Delivery</td>
+                  <td className="py-2 px-4">
+                    {productData.freeDelivery || Number(productData.deliveryCharge) === 0
+                      ? 'Free'
+                      : `${currency}${productData.deliveryCharge}`}
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -407,8 +424,11 @@ const Product = () => {
         
         {tabView === 'description' && (
           <div className="flex flex-col gap-4 py-6 text-sm text-gray-600 leading-relaxed">
-            <p>An e-commerce website is an online platform that facilitates buying and selling the products online.</p>
-            <p>E-commerce websites typically display products or services along with detailed product information for users to find it easy for purchasing.</p>
+            {productData.description ? (
+              <p className="whitespace-pre-line">{productData.description}</p>
+            ) : (
+              <p>No description available for this product.</p>
+            )}
           </div>
         )}
         

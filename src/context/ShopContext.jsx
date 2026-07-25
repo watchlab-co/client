@@ -8,7 +8,6 @@ export const ShopContext = createContext();
 const ShopContextProvider = (props) => {
 
     const currency = '₹'
-    const delivery_fee = 0;
     const backendUrl = import.meta.env.VITE_BACKEND_URL;// backend url
 
     const [search, setSearch] = useState('')
@@ -114,6 +113,21 @@ const ShopContextProvider = (props) => {
         }
         return totalAmount;
     };
+
+    const getDeliveryFee = () => {
+        let fee = 0;
+        for (const productId in cartItems) {
+            const hasQty = Object.values(cartItems[productId] || {}).some((qty) => qty > 0);
+            if (!hasQty) continue;
+
+            const product = products.find((p) => p._id === productId);
+            if (!product) continue;
+
+            if (product.freeDelivery) continue;
+            fee += Number(product.deliveryCharge) || 0;
+        }
+        return fee;
+    };
     
 
 
@@ -161,7 +175,8 @@ const ShopContextProvider = (props) => {
     const value = {
         products,
         currency,
-        delivery_fee,
+        delivery_fee: getDeliveryFee(),
+        getDeliveryFee,
         search,
         setSearch,
         showSearch,
